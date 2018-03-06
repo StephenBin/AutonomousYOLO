@@ -26,7 +26,7 @@ if __name__ == "__main__":
                             batch_size=32)
 
     # allocate gpu/cpu mem to the sym
-    mod = mx.mod.Module(symbol=sym, context=mx.cpu(0))
+    mod = mx.mod.Module(symbol=sym, context=mx.gpu(0))
 
     # setup metric
     # metric = mx.metric.create(loss_metric, allow_extra_outputs=True)
