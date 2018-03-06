@@ -21,9 +21,9 @@ if __name__ == "__main__":
     # get some input
     # change it to the data rec you create, and modify the batch_size
     train_data = get_iterator(path='DATA_rec/drive_small.rec', data_shape=(3, 224, 224), label_width=7 * 7 * 9,
-                              batch_size=2, shuffle=True)
+                              batch_size=32, shuffle=True)
     val_data = get_iterator(path='DATA_rec/drive_small.rec', data_shape=(3, 224, 224), label_width=7 * 7 * 9,
-                            batch_size=2)
+                            batch_size=32)
 
     # allocate gpu/cpu mem to the sym
     mod = mx.mod.Module(symbol=sym, context=mx.cpu(0))
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     mon = None  # mx.mon.Monitor(10, norm_stat, pattern=".*backward*.")
 
     # save model
-    checkpoint = mx.callback.do_checkpoint('drive_full_detect')
+    checkpoint = mx.callback.do_checkpoint('drive_detect')
 
     # Train
     # Try different hyperparamters to get the model converged, (batch_size,
@@ -59,6 +59,6 @@ if __name__ == "__main__":
             arg_params=args_params,
             aux_params=aux_params,
             allow_missing=True,
-            batch_end_callback=[mx.callback.Speedometer(batch_size=2, frequent=1, auto_reset=False), logtrain],
+            batch_end_callback=[mx.callback.Speedometer(batch_size=32, frequent=10, auto_reset=False), logtrain],
             epoch_end_callback=checkpoint,
             )
