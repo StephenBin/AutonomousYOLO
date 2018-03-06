@@ -91,15 +91,15 @@ def imgResizeBBoxTransform(img, bbox, sizet, grid_size=(7,7,5), dscale=32):
     return imgR, bboxyolo
 
 # Conver raw image to rec files
-def toRecFile(imgroot,imglist,annotation,sizet,grid_size,descale):
-    recF_name = "DATA_rec/drive_full"
+def toRecFile(imgroot,imglist,annotation,sizet,grid_size,descale,recfile_name):
+    recF_name = "DATA_rec/"+recfile_name
     record = mx.recordio.MXIndexedRecordIO(recF_name+".idx",recF_name+".rec",'w')
     for i in range(len(imglist)):
         imgname = imglist[i]
         img = cv2.imread(imgroot+imgname)
         bbox = annotation[imgname]
         print("Now is processing img {}".format(imgname))
-        imgR,bboxR = imgResizeBBoxTransform(img,bbox,224,(7,7,9),32)
+        imgR,bboxR = imgResizeBBoxTransform(img,bbox,sizet,grid_size,descale)
         header = mx.recordio.IRHeader(flag=0, label=bboxR.flatten(), id=0, id2=0)
         s = mx.recordio.pack_img(header, imgR, quality=100, img_fmt='.jpg')
         record.write_idx(i,s)
@@ -118,4 +118,5 @@ if __name__ == "__main__":
     sizet = 224
     grid_size = (7, 7, 9)
     descale = 32
-    toRecFile(trainDATA_path, imglist, labelwh, sizet, grid_size, descale)
+    full_recfile_name = "drive_full"
+    toRecFile(trainDATA_path, imglist, labelwh, sizet, grid_size, descale,full_recfile_name)
