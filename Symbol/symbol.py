@@ -1,5 +1,6 @@
 import mxnet as mx
 
+
 def expit_tensor(x):
     return 1/(1+mx.sym.exp(-x))
 
@@ -68,3 +69,4 @@ def get_resnet_model_YoloV1(model_path,epoch):
     # multi-output logit should be blocked from generating gradients
     out = mx.sym.Group([loss, mx.sym.BlockGrad(logit)])
     return out
+

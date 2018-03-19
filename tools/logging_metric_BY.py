@@ -64,6 +64,13 @@ class LossMetric(mx.metric.EvalMetric):
                 The labels of the data.
             preds : list of `NDArray`
                 Predicted values.
+            preds:[(-1,49,1),(-1,7,7,9)]   len=2
+            preds[0]:(-1,49,1): loss
+            preds[1]范围在【-1，1】之间
+
+                 P  N
+             P  TP  FP
+             N  FN  TN
             """
         self.num_inst += 1
         self.sum_loss = np.mean(preds[0].asnumpy())
@@ -99,7 +106,7 @@ class LossMetric(mx.metric.EvalMetric):
       values : list of float
          Value of the evaluations.
       """
-        names = ['c_accuracy', 'c_precision', 'c_recall','c_fpr' ,'c_diff', 'x_diff', 'y_diff',
+        names = ['c_accuracy', 'c_precision', 'c_recall', 'c_diff', 'x_diff', 'y_diff',
                  'w_diff', 'h_diff', 'loss', 'cls_diff']
 
         values = []
@@ -107,7 +114,6 @@ class LossMetric(mx.metric.EvalMetric):
             self.sum_tp + self.sum_tn + self.sum_fp + self.sum_fn))
         values.append(self.sum_tp / (self.sum_tp + self.sum_fp + 1e-6))
         values.append(self.sum_tp / (self.sum_tp + self.sum_fn + 1e-6))
-        values.append(self.sum_fp/(self.sum_fp + self.sum_tn +1e-6))
         values.extend([sum_val for sum_val in
                        (self.sum_conf, self.sum_x, self.sum_y, self.sum_w,
                         self.sum_h, self.sum_loss, self.sum_cls)])
